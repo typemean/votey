@@ -1,7 +1,7 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { withTRPC } from '@trpc/next';
-import { AppRouter } from '@/server/route/app.router';
+import { AppRouter } from '@/server/routers/app.router';
 import { loggerLink } from '@trpc/client/links/loggerLink';
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import superjson from 'superjson';
