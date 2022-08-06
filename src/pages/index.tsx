@@ -3,19 +3,13 @@ import { prisma } from '../db/client';
 import { trpc } from './utils/trpc';
 
 export default function Home({ questions }: any) {
-  const { data, isLoading } = trpc.useQuery(['getAllQuestions']);
+  const { data, isLoading } = trpc.useQuery(['questions.get-all']);
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <div>Loading....</div>;
   }
 
-  console.log('data: ', data);
-
-  return (
-    <div>
-      <code>{questions}</code>
-    </div>
-  );
+  return <div>{data[0]?.question}</div>;
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

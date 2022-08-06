@@ -1,23 +1,7 @@
 import { z } from 'zod';
 import { createRouter } from '../createRouter';
+import { questionsRouter } from './questions.router';
 
-export const appRouter = createRouter()
-  .query('hi', {
-    input: z
-      .object({
-        text: z.string().nullish(),
-      })
-      .nullish(),
-    resolve({ ctx, input }) {
-      return {
-        greeting: `hello ${input?.text ?? 'world'}`,
-      };
-    },
-  })
-  .query('getAllQuestions', {
-    async resolve({ ctx }) {
-      return await ctx.prisma.pollQuestion.findMany();
-    },
-  });
+export const appRouter = createRouter().merge('questions.', questionsRouter);
 
 export type AppRouter = typeof appRouter;
