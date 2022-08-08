@@ -19,7 +19,18 @@ function QuestionContent({ id }: { id: string }) {
     );
   }
 
-  return <div>{data.question}</div>;
+  const options = data.options as string[];
+
+  return (
+    <div className="flex flex-col p-2">
+      <h1 className="text-lg font-bold">{data.question}</h1>
+      <ul>
+        {options.map((option) => (
+          <li key={option}>{option}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default QuestionContent;

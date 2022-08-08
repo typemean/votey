@@ -17,4 +17,15 @@ model PollQuestion {
   createdAt DateTime  @default(now())
   endsAt    DateTime?
   question  String    @db.VarChar(5000)
+
+  options Json // 질문의 선택지를 배열로 받을것임
+  Vote    Vote[]
+}
+
+model Vote {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  question   PollQuestion @relation(fields: [questionId], references: [id])
+  questionId String
 }
