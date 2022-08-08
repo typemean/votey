@@ -1,4 +1,4 @@
-import { trpc } from '@/pages/utils/trpc';
+import { trpc } from '@/utils/trpc';
 import React, { useRef } from 'react';
 
 function QuestionCreator() {

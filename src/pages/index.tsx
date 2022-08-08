@@ -1,7 +1,5 @@
 import QuestionCreator from '@/components/QuestionCreator';
-import { GetServerSideProps } from 'next';
-import { prisma } from '../db/client';
-import { trpc } from './utils/trpc';
+import { trpc } from '@/utils/trpc';
 
 export default function Home() {
   const { data, isLoading } = trpc.useQuery(['questions.get-all']);
