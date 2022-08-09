@@ -1,6 +1,6 @@
 import { router } from '@trpc/server';
 import superjson from 'superjson';
-import { Context } from './createContext';
+import { Context } from './context';
 
 /**
  * ## trpc Router 생성 함수

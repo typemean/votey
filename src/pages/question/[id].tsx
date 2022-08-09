@@ -6,8 +6,6 @@ function QuestionDetailPage() {
   const { query } = useRouter();
   const { id } = query;
 
-  console.log('id: ', id);
-
   if (!id || typeof id !== 'string') {
     return (
       <div>

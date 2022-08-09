@@ -13,17 +13,19 @@ datasource db {
 }
 
 model PollQuestion {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  endsAt    DateTime?
-  question  String    @db.VarChar(5000)
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  endsAt     DateTime?
+  question   String    @db.VarChar(5000)
+  ownerToken String    @db.VarChar(256) // 질문 등록자의 Token
+  options    Json // 질문의 선택지를 배열로 받을것임
+  Vote       Vote[]
 
-  options Json // 질문의 선택지를 배열로 받을것임
-  Vote    Vote[]
+  @@index([ownerToken])
 }
 
 model Vote {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
   question   PollQuestion @relation(fields: [questionId], references: [id])

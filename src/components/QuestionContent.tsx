@@ -19,11 +19,16 @@ function QuestionContent({ id }: { id: string }) {
     );
   }
 
-  const options = data.options as string[];
+  const options = data.question.options as string[];
 
   return (
-    <div className="flex flex-col p-2">
-      <h1 className="text-lg font-bold">{data.question}</h1>
+    <div className="flex flex-col p-8">
+      {data.isOwner && (
+        <span className="bg-red-700 rounded-md p-3 text-white">
+          You made this!
+        </span>
+      )}
+      <p className="text-lg font-bold">{data.question.question}</p>
       <ul>
         {options.map((option) => (
           <li key={option}>{option}</li>

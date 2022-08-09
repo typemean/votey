@@ -1,4 +1,4 @@
-import { createContext } from '@/server/createContext';
+import { createContext } from '@/server/context';
 import { appRouter } from '@/server/routers/app.router';
 import * as trpc from '@trpc/server/adapters/next'; //? nextjs adapter
 

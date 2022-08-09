@@ -14,29 +14,39 @@ export const questionsRouter = createRouter()
       id: z.string(),
     }),
     async resolve({ ctx, input }) {
-      const result = await ctx.prisma.pollQuestion.findFirst({
+      const question = await ctx.prisma.pollQuestion.findFirst({
         where: {
           id: input.id,
         },
       });
 
-      if (!result) {
+      if (!question) {
         throw new trpc.TRPCError({
           code: 'NOT_FOUND',
           message: 'No Question...',
         });
       }
 
-      return result;
+      return {
+        question,
+        isOwner: question.ownerToken === ctx.token,
+      };
     },
   })
   .mutation('create', {
     input: createQuestionSchema,
     async resolve({ ctx, input }) {
+      if (!ctx.token)
+        throw new trpc.TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'No Token...',
+        });
+
       return await ctx.prisma.pollQuestion.create({
         data: {
           question: input.question,
           options: [],
+          ownerToken: ctx.token,
         },
       });
     },
