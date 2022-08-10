@@ -7,6 +7,7 @@ import {
   CreateQustionInput,
 } from '@/server/schemas/question.schema.';
 import { useRouter } from 'next/router';
+import FormError from './FormError';
 
 /**
  * 질문 생성 컴포넌트
@@ -53,7 +54,7 @@ function QuestionCreator() {
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col space-y-4 py-4 px-2">
-      <h1 className="text-lg font-bold">Create Question</h1>
+      <h1 className="text-lg font-bold">Create a Question</h1>
       <p>Type your Question</p>
 
       <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
@@ -64,9 +65,7 @@ function QuestionCreator() {
             className="w-full p-2 text-gray-800"
             placeholder="How do magnets work?"
           />
-          {errors.question && (
-            <p className="mt-2 text-red-400">{errors.question.message}</p>
-          )}
+          {errors.question && <FormError error={errors.question} />}
         </div>
 
         <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2">
@@ -84,6 +83,7 @@ function QuestionCreator() {
             </section>
           ))}
         </div>
+        {errors.options && <FormError error={errors.options} />}
 
         <button
           type="button"
