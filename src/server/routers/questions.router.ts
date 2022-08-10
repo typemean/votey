@@ -44,10 +44,32 @@ export const questionsRouter = createRouter()
         },
       });
 
-      return {
+      //? 투표 게시자거나 내가 투표했으면 투표 결과를 볼 수 있게 설정한다.
+      const rest = {
         question,
-        isOwner: question.ownerToken === ctx.token,
         vote: myVote,
+        isOwner: question.ownerToken === ctx.token,
+      };
+
+      if (rest.vote || rest.isOwner) {
+        const votes = await ctx.prisma.vote.groupBy({
+          where: { questionId: input.id },
+          by: ['choice'],
+          _count: true,
+          orderBy: {
+            choice: 'asc',
+          },
+        });
+
+        return {
+          ...rest,
+          votes,
+        };
+      }
+
+      return {
+        ...rest,
+        votes: undefined,
       };
     },
   })
@@ -63,11 +85,22 @@ export const questionsRouter = createRouter()
           message: 'No Token...',
         });
 
-      return await ctx.prisma.vote.create({
+      await ctx.prisma.vote.create({
         data: {
           questionId: input.questionId,
           choice: input.option,
           voterToken: ctx.token,
+        },
+      });
+
+      return await ctx.prisma.vote.groupBy({
+        where: {
+          questionId: input.questionId,
+        },
+        by: ['choice', 'questionId'],
+        _count: true,
+        orderBy: {
+          choice: 'asc',
         },
       });
     },

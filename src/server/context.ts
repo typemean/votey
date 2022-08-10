@@ -9,7 +9,7 @@ export async function createContext(opts?: trpcNext.CreateNextContextOptions) {
    *? 매번 import하는 대신  ctx에서 Prisma instance를 꺼내올 수 있다.
    *? 요청한 유저의 정보도 ctx에 넣어서 활용할 수 있다.
    */
-  return { prisma, token: opts?.req.cookies['poll-token'] };
+  return { prisma, token: opts?.req.cookies['poll-token'], req: opts?.req };
 }
 
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;
