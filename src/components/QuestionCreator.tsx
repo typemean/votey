@@ -1,33 +1,62 @@
 import { trpc } from '@/utils/trpc';
 import React, { useRef } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  createQuestionSchema,
+  CreateQustionInput,
+} from '@/server/schemas/question.schema.';
+import { useRouter } from 'next/router';
 
+/**
+ * 질문 생성 컴포넌트
+ */
 function QuestionCreator() {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const client = trpc.useContext();
+  const router = useRouter();
+
   const { mutate, isLoading } = trpc.useMutation('questions.create', {
     onSuccess: (data) => {
-      console.log('성공: ', data);
-      client.invalidateQueries(['questions.get-all-my-question']);
-      if (inputRef.current) {
-        inputRef.current.value = '';
-      }
+      router.push(`/question/${data.id}`);
     },
   });
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      mutate({ question: e.target.value });
-    }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<CreateQustionInput>({
+    resolver: zodResolver(createQuestionSchema),
+  });
+
+  const onSubmit: SubmitHandler<CreateQustionInput> = ({ question }) => {
+    mutate({
+      question,
+    });
   };
 
   return (
-    <input
-      type="text"
-      ref={inputRef}
-      disabled={isLoading}
-      onKeyDown={handleKeyDown}
-      className="disabled:bg-red-300"
-    />
+    <div className="mx-auto flex w-full max-w-4xl flex-col space-y-4 py-4 px-2">
+      <h1 className="text-lg font-bold">Question Create Page</h1>
+      <p>Type your Question</p>
+
+      <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <input
+          type="text"
+          {...register('question')}
+          className="p-2 text-gray-800"
+        />
+        {errors.question && (
+          <p className="text-red-400">{errors.question.message}</p>
+        )}
+        <button
+          type="submit"
+          className="cursor-pointer bg-slate-300 py-2 text-slate-900"
+        >
+          Create
+        </button>
+      </form>
+    </div>
   );
 }
 

@@ -30,7 +30,7 @@ export default function Home() {
                     {question.question}
                   </div>
                   <span className="text-sm">
-                    Created on {question.createdAt.toLocaleString()}
+                    Created on {question.createdAt.toDateString()}
                   </span>
                 </a>
               </Link>
