@@ -7,7 +7,7 @@ function QuestionCreator() {
   const { mutate, isLoading } = trpc.useMutation('questions.create', {
     onSuccess: (data) => {
       console.log('성공: ', data);
-      client.invalidateQueries(['questions.get-all']);
+      client.invalidateQueries(['questions.get-all-my-question']);
       if (inputRef.current) {
         inputRef.current.value = '';
       }

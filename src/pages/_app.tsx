@@ -21,7 +21,11 @@ export default withTRPC<AppRouter>({
   config({ ctx }) {
     //? Debug에 유용한 Link들을 추가
     const links = [
-      loggerLink(),
+      loggerLink({
+        enabled: (opts) =>
+          process.env.NODE_ENV === 'development' ||
+          (opts.direction === 'down' && opts.result instanceof Error),
+      }),
       httpBatchLink({
         maxBatchSize: 10,
         url: `${getBaseUrl()}/api/trpc`,
@@ -39,16 +43,23 @@ export default withTRPC<AppRouter>({
       },
       headers() {
         if (ctx?.req) {
+          console.log(
+            '&&&&&&&&&&&&&&&&&&&&& 헤 더 &&&&&&&&&&&&&&&&&&&&&: ',
+            ctx.req.headers
+          );
+
           return {
             ...ctx.req.headers,
             'x-ssr': '1',
           };
         }
-        return {};
+        return {
+          // cookie: ctx?.req?.headers.cookie //? 헤더의 쿠키만 전달하기
+        };
       },
       links,
       transformer: superjson,
     };
   },
-  ssr: false,
+  ssr: true,
 })(MyApp);
