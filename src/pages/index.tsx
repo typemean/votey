@@ -10,17 +10,33 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col p-6 bg-slate-200 min-h-screen">
-      <div className="flex flex-col">
-        <p className="text-2xl font-bold">Questions</p>
-        {data.map((question) => (
-          <Link href={`/question/${question.id}`} key={question.id}>
-            <a>
-              <div className="my-2">{question.question}</div>
+    <div className="flex flex-col p-6 min-h-screen">
+      <div className="flex flex-col max-w-4xl mx-auto w-full">
+        <header className="flex mb-8 items-center justify-between">
+          <p className="text-2xl font-bold">Questions</p>
+          <Link href="/create">
+            <a className="bg-gray-300 text-gray-900 p-2 rounded-md font-bold">
+              Create New Question
             </a>
           </Link>
-        ))}
-        <QuestionCreator />
+        </header>
+
+        <ul className="flex flex-col space-y-4">
+          {data.map((question) => (
+            <li key={question.id}>
+              <Link href={`/question/${question.id}`}>
+                <a>
+                  <div className="my-2 text-lg font-bold">
+                    {question.question}
+                  </div>
+                  <span className="text-sm">
+                    Created on {question.createdAt.toLocaleString()}
+                  </span>
+                </a>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
