@@ -1,6 +1,5 @@
 import QuestionContent from '@/components/QuestionContent';
 import { useRouter } from 'next/router';
-import React from 'react';
 
 function QuestionDetailPage() {
   const { query } = useRouter();

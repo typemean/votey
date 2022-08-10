@@ -21,13 +21,13 @@ function QuestionContent({ id }: { id: string }) {
   const options = data.question.options as { text: string }[];
 
   return (
-    <div className="flex flex-col p-8">
+    <div className="flex flex-col space-y-4  p-8">
       {data.isOwner && (
         <span className="rounded-md bg-red-700 p-3 text-white">
           You made this!
         </span>
       )}
-      <p className="text-lg font-bold">{data.question.question}</p>
+      <p className="text-2xl font-bold">{data.question.question}</p>
       <ul>
         {options.map((option) => (
           <li key={option.text}>{option.text}</li>

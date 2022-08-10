@@ -22,6 +22,7 @@ export const questionsRouter = createRouter()
       id: z.string(),
     }),
     async resolve({ ctx, input }) {
+      // 질문 정보를 가져오기
       const question = await ctx.prisma.pollQuestion.findFirst({
         where: {
           id: input.id,
@@ -35,10 +36,40 @@ export const questionsRouter = createRouter()
         });
       }
 
+      // 내가 투표한 정보를 가져오기
+      const myVote = await ctx.prisma.vote.findFirst({
+        where: {
+          questionId: input.id,
+          voterToken: ctx.token,
+        },
+      });
+
       return {
         question,
         isOwner: question.ownerToken === ctx.token,
+        vote: myVote,
       };
+    },
+  })
+  .mutation('vote-on-question', {
+    input: z.object({
+      questionId: z.string(),
+      option: z.number().min(0).max(10),
+    }),
+    async resolve({ ctx, input }) {
+      if (!ctx.token)
+        throw new trpc.TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'No Token...',
+        });
+
+      return await ctx.prisma.vote.create({
+        data: {
+          questionId: input.questionId,
+          choice: input.option,
+          voterToken: ctx.token,
+        },
+      });
     },
   })
   .mutation('create', {

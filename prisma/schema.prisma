@@ -25,9 +25,12 @@ model PollQuestion {
 }
 
 model Vote {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
+  id         String       @id @default(cuid())
+  createdAt  DateTime     @default(now())
+  choice     Int
+  voterToken String       @db.VarChar(256) // 투표자의 Token
   question   PollQuestion @relation(fields: [questionId], references: [id])
   questionId String
+
+  @@index([voterToken])
 }
