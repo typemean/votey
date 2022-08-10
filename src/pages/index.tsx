@@ -3,7 +3,7 @@ import { trpc } from '@/utils/trpc';
 import Link from 'next/link';
 
 export default function Home() {
-  const { data, isLoading } = trpc.useQuery(['questions.get-all']);
+  const { data, isLoading } = trpc.useQuery(['questions.get-all-my-question']);
 
   if (isLoading || !data) {
     return <div>Loading....</div>;

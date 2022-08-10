@@ -4,9 +4,15 @@ import { createQuestionSchema } from '../schemas/question.schema.';
 import * as trpc from '@trpc/server';
 
 export const questionsRouter = createRouter()
-  .query('get-all', {
+  .query('get-all-my-question', {
     async resolve({ ctx }) {
-      return await ctx.prisma.pollQuestion.findMany();
+      return await ctx.prisma.pollQuestion.findMany({
+        where: {
+          ownerToken: {
+            equals: ctx.token,
+          },
+        },
+      });
     },
   })
   .query('get-by-id', {
