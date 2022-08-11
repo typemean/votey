@@ -8,6 +8,7 @@ import {
 } from '@/server/schemas/question.schema.';
 import { useRouter } from 'next/router';
 import FormError from './FormError';
+import Head from 'next/head';
 
 /**
  * 질문 생성 컴포넌트
@@ -52,55 +53,89 @@ function QuestionCreator() {
     });
   };
 
+  if (isLoading)
+    return (
+      <div className="flex min-h-screen items-center justify-center antialiased">
+        <p className="text-white/40">Loading...</p>
+      </div>
+    );
+
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col space-y-4 py-4 px-2">
-      <h1 className="text-lg font-bold">Create a Question</h1>
-      <p>Type your Question</p>
+    <>
+      <Head>
+        <title>Create | OnAVote</title>
+      </Head>
+      <div className="mx-auto flex h-screen w-full max-w-3xl flex-col space-y-4 py-12 px-6">
+        <h2 className="text-2xl font-bold">Create a New Poll</h2>
+        <label className="label">
+          <span className="label-text text-base font-semibold">
+            Your Question
+          </span>
+        </label>
 
-      <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-        <div className="col-span-2">
-          <input
-            type="text"
-            {...register('question')}
-            className="w-full p-2 text-gray-800"
-            placeholder="How do magnets work?"
-          />
-          {errors.question && <FormError error={errors.question} />}
-        </div>
+        <form className="form-control gap-6" onSubmit={handleSubmit(onSubmit)}>
+          <div className="col-span-2">
+            <input
+              type="text"
+              {...register('question', { required: true })}
+              className="input input-bordered block w-full rounded-md text-gray-300 focus:invalid:input-error"
+              placeholder="How do magnets work?"
+              minLength={5}
+              required
+            />
+            {errors.question && <FormError error={errors.question} />}
+          </div>
 
-        <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2">
-          {fields.map((field, index) => (
-            <section key={field.id} className="">
-              <input
-                {...register(`options.${index}.text`, {
-                  required: true,
-                })}
-                type="text"
-                className=" w-full p-2 text-gray-800"
-                placeholder="Type your option"
-              />
-              <button onClick={() => remove(index)}>Delete</button>
-            </section>
-          ))}
-        </div>
-        {errors.options && <FormError error={errors.options} />}
+          <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2">
+            {fields.map((field, index) => (
+              <section key={field.id} className="relative">
+                <input
+                  {...register(`options.${index}.text`, {
+                    required: true,
+                  })}
+                  type="text"
+                  className="input input-bordered w-full font-medium text-gray-300"
+                  placeholder="Type your option"
+                />
+                <button
+                  type="button"
+                  className="absolute right-2 top-1/2 -translate-y-1/2"
+                  onClick={() => remove(index)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+              </section>
+            ))}
+          </div>
+          {errors.options && <FormError error={errors.options} />}
 
-        <button
-          type="button"
-          onClick={() => append({ text: '' })}
-          className="col-span-2 cursor-pointer bg-slate-300 py-2 text-slate-900"
-        >
-          Add Option
-        </button>
+          <button
+            type="button"
+            onClick={() => append({ text: '' })}
+            className="btn btn-ghost col-span-2"
+          >
+            Add Option
+          </button>
 
-        <button
-          type="submit"
-          className="col-span-2 cursor-pointer bg-slate-300 py-2 text-slate-900"
-        >
-          Create
-        </button>
-      </form>
-    </div>
+          <button type="submit" className="btn col-span-2">
+            Create
+          </button>
+        </form>
+      </div>
+    </>
   );
 }
 

@@ -1,4 +1,6 @@
 import { trpc } from '@/utils/trpc';
+import Head from 'next/head';
+import Link from 'next/link';
 
 function QuestionContent({ id }: { id: string }) {
   let totalVotes = 0;
@@ -57,14 +59,27 @@ function QuestionContent({ id }: { id: string }) {
   const options = data.question.options as { text: string }[];
 
   return (
-    <div className="flex flex-col space-y-4  p-8">
-      {data.isOwner && (
-        <span className="rounded-md bg-red-700 p-3 text-white">
-          You made this!
-        </span>
-      )}
-      <p className="text-2xl font-bold">{data.question.question}</p>
-      <ul>
+    <div className="mx-auto flex min-h-screen w-full max-w-4xl flex-col p-6">
+      <Head>
+        <title>Question | OnAVote</title>
+      </Head>
+
+      <header className="mb-10 flex w-full items-center justify-between">
+        <Link href={'/'}>
+          <h1 className="cursor-pointer text-4xl font-bold">OnAVote</h1>
+        </Link>
+        {data?.isOwner && (
+          <div className="rounded-md bg-gray-700 p-3 text-violet-300">
+            You made this!
+          </div>
+        )}
+      </header>
+
+      <p className="label-text mb-10 text-center text-2xl font-bold">
+        {data.question.question}
+      </p>
+
+      <ul className="flex flex-col gap-4">
         {options.map((option, idx) => {
           //? 투표한 사람에게 보여짐
           if (data.isOwner || data.vote) {
@@ -76,7 +91,7 @@ function QuestionContent({ id }: { id: string }) {
             return (
               <li key={option.text}>
                 <div className="flex justify-between">
-                  <p className="font-bold">{option.text}</p>
+                  <p className="label label-text font-bold">{option.text}</p>
                   {validIdx !== -1 && (
                     <p>
                       {getPercent(data?.votes?.[validIdx!]?._count)?.toFixed()}%
@@ -85,7 +100,7 @@ function QuestionContent({ id }: { id: string }) {
                   {validIdx === -1 && <p>0%</p>}
                 </div>
                 <progress
-                  className="progress progress-secondary w-full"
+                  className="progress progress-primary w-full"
                   value={
                     validIdx !== -1 ? data?.votes?.[validIdx!]?._count ?? 0 : 0
                   }
@@ -97,13 +112,13 @@ function QuestionContent({ id }: { id: string }) {
 
           //? 투표 안한 사람에 보여짐
           return (
-            <li
+            <button
               key={option.text}
               onClick={() => handleVote(idx)}
-              className="cursor-pointer"
+              className="btn btn-outline text-lg"
             >
               {option.text}
-            </li>
+            </button>
           );
         })}
       </ul>
